@@ -8,9 +8,11 @@ import fileinput
 import re
 import time
 import random
+import sys
 
 N = 1
 GETNAME = re.compile(r'sid=(.*)')
+
 
 def getPage(url, output_folder="./output_profiles"):
     """
@@ -20,7 +22,7 @@ def getPage(url, output_folder="./output_profiles"):
     name = GETNAME.search(url).group(1)
 
     # random sleeping for avoiding spider detection
-    timeToSleep = random.randint(1,30)
+    timeToSleep = random.randint(1, 30)
     time.sleep(timeToSleep)
     
     print "%4d: fetching %s..." % (N, url.strip()), 
@@ -51,17 +53,14 @@ if __name__ == '__main__':
     for line in fileinput.input():
         links.append(line)
 
-    try:
-        startPage = sys.argv[1]
-    else:
-        print 'Usage: %s <page_num>' % sys.argv[0]
+    startPage = 1
 
-    links = links[startPage-1:]
+    links = links[startPage - 1:]
+    links = links[:5]  # DEBUG: only 5 test cases
 
     N = startPage
 
     result = map(getPage, links)
 
     print "total: %s" % len(result)
-    print "fetched: %s" % len(filter(lambda x:x, result))
-
+    print "fetched: %s" % len(filter(lambda x: x, result))
